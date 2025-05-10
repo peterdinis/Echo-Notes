@@ -10,13 +10,35 @@ generator client {
 // TODO: Author column here
 
 model Workspace {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String
-  icon        String   @default("")
-  inTrash     Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  icon        String    @default("")
+  inTrash     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   emojiLogo   String
   banner      String
+  folders     Folder[]
+}
+
+model Folder {
+  id           Int        @id @default(autoincrement())
+  name         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  workspaceId  Int
+  inTrash      Boolean
+  files        File[]
+  workspace    Workspace  @relation(fields: [workspaceId], references: [id])
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  name       String
+  content    String 
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  folderId   Int
+  folder     Folder   @relation(fields: [folderId], references: [id])
 }
