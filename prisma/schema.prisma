@@ -1,4 +1,3 @@
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -6,4 +5,18 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+}
+
+// TODO: Author column here
+
+model Workspace {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  icon        String   @default("")
+  inTrash     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  emojiLogo   String
+  banner      String
 }
