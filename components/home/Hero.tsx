@@ -2,6 +2,9 @@ import { FC } from 'react';
 import Navigation from './Navigation';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import Features from './Features';
+import Pricing from './Pricing';
+import Footer from '../shared/Footer';
 
 const Hero: FC = () => {
     return (
@@ -52,6 +55,9 @@ const Hero: FC = () => {
                     </div>
                 </div>
             </section>
+            <Features />
+            <Pricing />
+            <Footer />
         </div>
     );
 };
