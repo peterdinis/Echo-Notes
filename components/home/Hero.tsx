@@ -30,11 +30,11 @@ const Hero: FC = () => {
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
                             <Link href="/register">
-                                <Button size="lg" className="bg-obsidian-accent text-obsidian-darkest hover:bg-obsidian-accent2 px-8">
+                                <Button size="lg" className="bg-rose-700 text-white hover:bg-rose-900 px-8">
                                     Start For Free
                                 </Button>
                             </Link>
-                            <Button variant="outline" size="lg" className="border-obsidian-accent text-obsidian-accent hover:bg-obsidian-accent/10">
+                            <Button variant="outline" size="lg" className="bg-orange-500 text-white hover:bg-orange-800">
                                 Watch Demo
                             </Button>
                         </div>
