@@ -41,7 +41,7 @@ const Hero: FC = () => {
                     </div>
 
                     {/* Preview Image */}
-                    <div className="mt-16 max-w-5xl mx-auto animate-fade-in shadow-2xl shadow-obsidian-accent/20 rounded-lg overflow-hidden" style={{ animationDelay: '0.6s' }}>
+                    <div className="mt-16 max-w-5xl dark:bg-stone-900 mx-auto animate-fade-in shadow-2xl shadow-obsidian-accent/20 rounded-lg overflow-hidden" style={{ animationDelay: '0.6s' }}>
                         <div className="p-2 bg-obsidian-dark rounded-t-lg flex items-center space-x-2">
                             <div className="w-3 h-3 rounded-full bg-red-400" />
                             <div className="w-3 h-3 rounded-full bg-yellow-400" />
