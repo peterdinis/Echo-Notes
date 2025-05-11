@@ -3,6 +3,7 @@
 import { FC, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { ModeToggle } from '../shared/ModeToggle';
 
 const Navigation: FC = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -76,6 +77,7 @@ const Navigation: FC = () => {
                             Get Started
                         </Button>
                     </Link>
+                    <ModeToggle />
                 </div>
             </div>
         </nav>
