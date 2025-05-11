@@ -1,11 +1,8 @@
-import { NextPage } from "next";
+import Hero from '@/components/home/Hero';
+import { NextPage } from 'next';
 
 const Homepage: NextPage = () => {
-    return (
-        <>
-            HOMEPAGE
-        </>
-    )
-}
+    return <Hero />;
+};
 
-export default Homepage
+export default Homepage;

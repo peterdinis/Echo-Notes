@@ -7,8 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// TODO: Author column here
-
 model Workspace {
   id          Int      @id @default(autoincrement())
   name        String
