@@ -47,7 +47,7 @@ const Features = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-zinc-300 border-obsidian-dark hover:border-obsidian-accent/50 transition-all duration-300 note-card">
+            <Card key={index} className="bg-zinc-300 dark:bg-zinc-900 border-obsidian-dark hover:border-obsidian-accent/50 transition-all duration-300 note-card">
               <CardHeader>
                 <div className="text-3xl mb-4">{feature.icon}</div>
                 <CardTitle className="text-xl text-obsidian-text">{feature.title}</CardTitle>

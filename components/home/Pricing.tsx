@@ -67,7 +67,7 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`bg-stone-300 border-obsidian-dark note-card relative ${
+              className={`bg-stone-300 dark:bg-zinc-900 border-obsidian-dark note-card relative ${
                 plan.popular ? 'border-obsidian-accent ring-2 ring-obsidian-accent/20' : ''
               }`}
             >
@@ -103,7 +103,7 @@ const Pricing = () => {
                   <Button 
                     className={`w-full ${
                       plan.popular 
-                        ? 'bg-white text-obsidian-darkest hover:bg-obsidian-accent2' 
+                        ? 'bg-white dark:bg-zinc-700 text-obsidian-darkest hover:bg-obsidian-accent2' 
                         : 'border-obsidian-accent text-obsidian-accent hover:bg-obsidian-accent/10'
                     }`}
                     variant={plan.popular ? 'default' : 'outline'}
