@@ -1,4 +1,9 @@
+'use client';
+
 import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,9 +15,35 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import Link from 'next/link';
+import { useLoginUser } from '@/hooks/auth/useLogin';
+import { useRouter } from 'next/navigation';
+
+type FormValues = {
+    email: string;
+    password: string;
+};
 
 const LoginForm: FC = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FormValues>();
+    const loginMutation = useLoginUser();
+    const router = useRouter();
+
+    const onSubmit = async (data: FormValues) => {
+        loginMutation.mutate(data, {
+            onSuccess: () => {
+                toast.success('Logged in successfully!');
+                router.push('/dashboard');
+            },
+            onError: (error: Error) => {
+                toast.error(error.message || 'Login failed');
+            },
+        });
+    };
+
     return (
         <div className='bg-obsidian-darkest flex min-h-screen items-center justify-center px-4 py-12'>
             {/* Background Effects */}
@@ -39,27 +70,18 @@ const LoginForm: FC = () => {
                 <Card className='bg-obsidian-dark border-obsidian-dark animate-scale-in'>
                     <CardHeader>
                         <CardTitle className='text-obsidian-text text-center text-2xl'>
-                            Create an account
+                            Sign in to your account
                         </CardTitle>
                         <CardDescription className='text-obsidian-muted text-center'>
-                            Enter your details to get started
+                            Enter your credentials below
                         </CardDescription>
                     </CardHeader>
+
                     <CardContent>
-                        <form className='space-y-4'>
-                            <div className='space-y-2'>
-                                <Label
-                                    htmlFor='name'
-                                    className='text-obsidian-text'
-                                >
-                                    Name
-                                </Label>
-                                <Input
-                                    id='name'
-                                    placeholder='Your name'
-                                    className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
-                                />
-                            </div>
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className='space-y-4'
+                        >
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='email'
@@ -72,8 +94,21 @@ const LoginForm: FC = () => {
                                     type='email'
                                     placeholder='name@example.com'
                                     className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                    {...register('email', {
+                                        required: 'Email is required',
+                                        pattern: {
+                                            value: /\S+@\S+\.\S+/,
+                                            message: 'Invalid email address',
+                                        },
+                                    })}
                                 />
+                                {errors.email && (
+                                    <p className='text-sm text-red-500'>
+                                        {errors.email.message}
+                                    </p>
+                                )}
                             </div>
+
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='password'
@@ -84,15 +119,34 @@ const LoginForm: FC = () => {
                                 <Input
                                     id='password'
                                     type='password'
-                                    placeholder='Create a strong password'
+                                    placeholder='Your password'
                                     className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                    {...register('password', {
+                                        required: 'Password is required',
+                                        minLength: {
+                                            value: 6,
+                                            message:
+                                                'Password must be at least 6 characters',
+                                        },
+                                    })}
                                 />
+                                {errors.password && (
+                                    <p className='text-sm text-red-500'>
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
+
                             <Button
                                 type='submit'
                                 className='bg-obsidian-accent text-obsidian-darkest hover:bg-obsidian-accent2 w-full'
+                                disabled={
+                                    isSubmitting || loginMutation.isPending
+                                }
                             >
-                                Create Account
+                                {isSubmitting || loginMutation.isPending
+                                    ? 'Signing in...'
+                                    : 'Sign In'}
                             </Button>
 
                             <div className='relative my-6'>
@@ -107,14 +161,15 @@ const LoginForm: FC = () => {
                             </div>
                         </form>
                     </CardContent>
+
                     <CardFooter className='flex justify-center'>
                         <p className='text-obsidian-muted text-sm'>
-                            Already have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <Link
-                                href='/login'
+                                href='/register'
                                 className='text-obsidian-accent hover:underline'
                             >
-                                Sign in
+                                Create one
                             </Link>
                         </p>
                     </CardFooter>

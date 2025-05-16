@@ -1,4 +1,10 @@
+'use client';
+
 import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import Link from 'next/link';
+import { useSignUpUser } from '@/hooks/auth/useRegister';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,12 +16,39 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+type FormValues = {
+    email: string;
+    password: string;
+    nick?: string;
+    firstName: string;
+    lastName?: string;
+};
 
 const RegisterForm: FC = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormValues>();
+    const router = useRouter();
+    const signUpMutation = useSignUpUser();
+
+    const onSubmit = (data: FormValues) => {
+        signUpMutation.mutate(data, {
+            onSuccess: () => {
+                toast.success('Account created successfully!');
+                router.push('/login');
+            },
+            onError: (err) => {
+                toast.error((err as Error)?.message || 'Something went wrong');
+            },
+        });
+    };
+
     return (
         <div className='bg-obsidian-darkest flex min-h-screen items-center justify-center px-4 py-12'>
-            {/* Background Effects */}
             <div className='absolute inset-0 z-0'>
                 <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
                 <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
@@ -45,21 +78,34 @@ const RegisterForm: FC = () => {
                             Enter your details to get started
                         </CardDescription>
                     </CardHeader>
+
                     <CardContent>
-                        <form className='space-y-4'>
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className='space-y-4'
+                        >
                             <div className='space-y-2'>
                                 <Label
-                                    htmlFor='name'
+                                    htmlFor='firstName'
                                     className='text-obsidian-text'
                                 >
-                                    Name
+                                    First Name
                                 </Label>
                                 <Input
-                                    id='name'
-                                    placeholder='Your name'
+                                    id='firstName'
+                                    {...register('firstName', {
+                                        required: 'First name is required',
+                                    })}
+                                    placeholder='Your first name'
                                     className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
                                 />
+                                {errors.firstName && (
+                                    <p className='text-sm text-red-500'>
+                                        {errors.firstName.message}
+                                    </p>
+                                )}
                             </div>
+
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='email'
@@ -70,10 +116,23 @@ const RegisterForm: FC = () => {
                                 <Input
                                     id='email'
                                     type='email'
+                                    {...register('email', {
+                                        required: 'Email is required',
+                                        pattern: {
+                                            value: /\S+@\S+\.\S+/,
+                                            message: 'Invalid email address',
+                                        },
+                                    })}
                                     placeholder='name@example.com'
                                     className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
                                 />
+                                {errors.email && (
+                                    <p className='text-sm text-red-500'>
+                                        {errors.email.message}
+                                    </p>
+                                )}
                             </div>
+
                             <div className='space-y-2'>
                                 <Label
                                     htmlFor='password'
@@ -84,40 +143,61 @@ const RegisterForm: FC = () => {
                                 <Input
                                     id='password'
                                     type='password'
+                                    {...register('password', {
+                                        required: 'Password is required',
+                                        minLength: {
+                                            value: 6,
+                                            message:
+                                                'Password must be at least 6 characters',
+                                        },
+                                    })}
                                     placeholder='Create a strong password'
                                     className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
                                 />
+                                {errors.password && (
+                                    <p className='text-sm text-red-500'>
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
-                            <Button
-                                type='submit'
-                                className='bg-obsidian-accent text-obsidian-darkest hover:bg-obsidian-accent2 w-full'
-                            >
-                                Create Account
-                            </Button>
 
-                            <div className='relative my-6'>
-                                <div className='absolute inset-0 flex items-center'>
-                                    <div className='border-obsidian-dark w-full border-t'></div>
-                                </div>
-                                <div className='relative flex justify-center text-xs'>
-                                    <span className='bg-obsidian-dark text-obsidian-muted px-2'>
-                                        Or continue with
-                                    </span>
-                                </div>
+                            <div className='space-y-2'>
+                                <Label
+                                    htmlFor='nick'
+                                    className='text-obsidian-text'
+                                >
+                                    Nickname (optional)
+                                </Label>
+                                <Input
+                                    id='nick'
+                                    {...register('nick')}
+                                    placeholder='Optional nickname'
+                                    className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                />
                             </div>
+
+                            <div className='space-y-2'>
+                                <Label
+                                    htmlFor='lastName'
+                                    className='text-obsidian-text'
+                                >
+                                    Last Name (optional)
+                                </Label>
+                                <Input
+                                    id='lastName'
+                                    {...register('lastName')}
+                                    placeholder='Optional last name'
+                                    className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                />
+                            </div>
+
+                            <CardFooter className='pt-4'>
+                                <Button type='submit' className='w-full'>
+                                    Register
+                                </Button>
+                            </CardFooter>
                         </form>
                     </CardContent>
-                    <CardFooter className='flex justify-center'>
-                        <p className='text-obsidian-muted text-sm'>
-                            Already have an account?{' '}
-                            <Link
-                                href='/login'
-                                className='text-obsidian-accent hover:underline'
-                            >
-                                Sign in
-                            </Link>
-                        </p>
-                    </CardFooter>
                 </Card>
             </div>
         </div>
