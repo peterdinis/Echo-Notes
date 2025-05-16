@@ -1,8 +1,8 @@
-import RegisterForm from "@/components/auth/RegisterForm";
-import { NextPage } from "next";
+import RegisterForm from '@/components/auth/RegisterForm';
+import { NextPage } from 'next';
 
 const RegisterPage: NextPage = () => {
-    return <RegisterForm/>
-}
+    return <RegisterForm />;
+};
 
-export default RegisterPage
+export default RegisterPage;

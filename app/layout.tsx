@@ -20,11 +20,19 @@ export const metadata: Metadata = {
         default: 'Echo Notes',
         template: '%s | Echo Notes',
     },
-    description: 'Echo Notes is a collaborative, real-time note-taking app designed for teams and individuals to write, edit, and share ideas effortlessly.',
+    description:
+        'Echo Notes is a collaborative, real-time note-taking app designed for teams and individuals to write, edit, and share ideas effortlessly.',
     applicationName: 'Echo Notes',
     authors: [{ name: 'Your Name', url: 'https://yourwebsite.com' }],
     generator: 'Next.js',
-    keywords: ['notes', 'collaboration', 'real-time editing', 'Echo Notes', 'markdown', 'team productivity'],
+    keywords: [
+        'notes',
+        'collaboration',
+        'real-time editing',
+        'Echo Notes',
+        'markdown',
+        'team productivity',
+    ],
     icons: {
         icon: '/favicon.ico',
         shortcut: '/favicon.ico',
