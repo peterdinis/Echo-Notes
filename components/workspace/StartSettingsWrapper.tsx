@@ -5,8 +5,11 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import dynamic from "next/dynamic";
+import { EmojiClickData } from "emoji-picker-react";
 import { useRouter } from "next/navigation";
+
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 const StartSettingsWrapper: FC = () => {
   const [name, setName] = useState("");
@@ -50,7 +53,6 @@ const StartSettingsWrapper: FC = () => {
             <Button
               className="w-full bg-primary text-white"
               onClick={() => {
-                // Tu môžeš dať funkciu na vytvorenie workspace
                 console.log("Vytváram workspace:", { name, emoji, description });
               }}
             >
