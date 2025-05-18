@@ -60,7 +60,7 @@ const LoginForm: FC = () => {
                     href='/'
                     className='mb-8 flex items-center justify-center space-x-2'
                 >
-                    <div className='bg-obsidian-accent flex h-8 w-8 items-center justify-center rounded-full'>
+                    <div className='bg-pink-600 flex h-8 w-8 items-center justify-center rounded-full'>
                         <span className='text-obsidian-darkest font-bold'>
                             E
                         </span>
