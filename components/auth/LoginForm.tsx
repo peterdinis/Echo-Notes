@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/card';
 import { useLoginUser } from '@/hooks/auth/useLogin';
 import { useRouter } from 'next/navigation';
+import Navigation from '../home/Navigation';
+import { Loader2 } from 'lucide-react';
 
 type FormValues = {
     email: string;
@@ -46,7 +48,8 @@ const LoginForm: FC = () => {
 
     return (
         <>
-        <div className='bg-obsidian-darkest flex min-h-screen items-center justify-center px-4 py-12'>
+            <Navigation />
+            <div className='dark:bg-background bg-stone-200 flex min-h-screen items-center justify-center px-4 py-12'>
             <div className='absolute inset-0 z-0'>
                 <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
                 <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
@@ -139,13 +142,13 @@ const LoginForm: FC = () => {
 
                             <Button
                                 type='submit'
-                                className='bg-obsidian-accent text-obsidian-darkest hover:bg-obsidian-accent2 w-full'
+                                className='w-full mt-2'
                                 disabled={
                                     isSubmitting || loginMutation.isPending
                                 }
                             >
                                 {isSubmitting || loginMutation.isPending
-                                    ? 'Signing in...'
+                                    ? <Loader2 className='animate-spin w-8 h-8' />
                                     : 'Sign In'}
                             </Button>
 
