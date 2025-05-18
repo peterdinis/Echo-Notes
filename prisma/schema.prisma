@@ -15,7 +15,7 @@ model Workspace {
   inTrash     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  emojiLogo   String
+  emojiLogo   String?
   banner      String
   userId      Int
   user        User     @relation(fields: [userId], references: [id]) 

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { EmojiClickData } from "emoji-picker-react";
 import { useRouter } from "next/navigation";
+import { useCreateWorkspace } from "@/hooks/workspace/useCreateNewWorkspace";
 
 const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
@@ -18,8 +19,26 @@ const StartSettingsWrapper: FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
 
+  const { mutate: createWorkspace, isPending } = useCreateWorkspace();
+
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setEmoji(emojiData.emoji);
+  };
+
+  const handleCreate = () => {
+    createWorkspace(
+      {
+        name,
+        description,
+        emojiLogo: emoji,
+        banner: "https://images.unsplash.com/photo-1596495577886-d920f1fb7238",
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+      }
+    );
   };
 
   if (!isVisible) return null;
@@ -52,11 +71,10 @@ const StartSettingsWrapper: FC = () => {
           <div className="flex flex-col sm:flex-row gap-2 pt-2">
             <Button
               className="w-full bg-primary text-white"
-              onClick={() => {
-                console.log("Vytváram workspace:", { name, emoji, description });
-              }}
+              onClick={handleCreate}
+              disabled={isPending}
             >
-              Vytvoriť
+              {isPending ? "Vytváram..." : "Vytvoriť"}
             </Button>
 
             <Button

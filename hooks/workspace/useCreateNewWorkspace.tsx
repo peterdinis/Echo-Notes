@@ -8,7 +8,7 @@ export type CreateWorkspaceInput = z.infer<typeof createWorkspaceSchema>;
 export const useCreateWorkspace = () => {
   return useMutation({
     mutationFn: async (data: CreateWorkspaceInput) => {
-      const res = await fetch("/api/workspace/create", {
+      const res = await fetch("/api/workspace/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

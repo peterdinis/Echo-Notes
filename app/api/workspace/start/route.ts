@@ -8,7 +8,7 @@ export const createWorkspaceSchema = z.object({
   name: z.string().min(1, "Názov je povinný"),
   description: z.string().min(1, "Popis je povinný"),
   emojiLogo: z.string().emoji("Musí byť emoji"),
-  banner: z.string().url("Banner musí byť validná URL"),
+  banner: z.string()
 });
 
 export async function POST(req: Request) {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
   }
 
-  const { name, description, emojiLogo, banner } = result.data;
+  const { name, description, emojiLogo, banner} = result.data;
 
   try {
     const dbUser = await db.user.findUnique({
@@ -44,8 +44,8 @@ export async function POST(req: Request) {
         name,
         description,
         emojiLogo,
-        banner,
         userId: dbUser.id,
+        banner: "",
       },
     });
 
