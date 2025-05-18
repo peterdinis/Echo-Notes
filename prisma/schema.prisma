@@ -15,8 +15,10 @@ model Workspace {
   inTrash     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  emojiLogo   String
+  emojiLogo   String?
   banner      String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id]) 
   folders     Folder[]
 }
 
@@ -42,13 +44,14 @@ model File {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   nick      String
   firstName String
   avatarURL String?
   lastName  String
-  email     String   @unique
+  email     String     @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  workspaces Workspace[] 
 }
