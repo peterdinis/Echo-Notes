@@ -45,8 +45,8 @@ const LoginForm: FC = () => {
     };
 
     return (
+        <>
         <div className='bg-obsidian-darkest flex min-h-screen items-center justify-center px-4 py-12'>
-            {/* Background Effects */}
             <div className='absolute inset-0 z-0'>
                 <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
                 <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
@@ -176,6 +176,7 @@ const LoginForm: FC = () => {
                 </Card>
             </div>
         </div>
+        </>
     );
 };
 

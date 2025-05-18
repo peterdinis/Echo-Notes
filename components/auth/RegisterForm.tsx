@@ -195,7 +195,7 @@ const RegisterForm: FC = () => {
                             </div>
 
                             <CardFooter className='pt-4'>
-                                <Button type='submit' className='w-full'>
+                                <Button type='submit' size="lg" className='w-full'>
                                     Register
                                 </Button>
                             </CardFooter>
