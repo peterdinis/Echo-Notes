@@ -17,6 +17,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import Navigation from '../home/Navigation';
 
 type FormValues = {
     email: string;
@@ -48,7 +49,9 @@ const RegisterForm: FC = () => {
     };
 
     return (
-        <div className='bg-obsidian-darkest flex min-h-screen items-center justify-center px-4 py-12'>
+       <>
+       <Navigation />
+        <div className='dark:bg-background bg-stone-200 flex min-h-screen items-center justify-center px-4 py-12'>
             <div className='absolute inset-0 z-0'>
                 <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
                 <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
@@ -59,7 +62,7 @@ const RegisterForm: FC = () => {
                     href='/'
                     className='mb-8 flex items-center justify-center space-x-2'
                 >
-                    <div className='bg-obsidian-accent flex h-8 w-8 items-center justify-center rounded-full'>
+                    <div className='bg-pink-700 flex h-8 w-8 items-center justify-center rounded-full'>
                         <span className='text-obsidian-darkest font-bold'>
                             E
                         </span>
@@ -192,7 +195,7 @@ const RegisterForm: FC = () => {
                             </div>
 
                             <CardFooter className='pt-4'>
-                                <Button type='submit' className='w-full'>
+                                <Button type='submit' size="lg" className='w-full'>
                                     Register
                                 </Button>
                             </CardFooter>
@@ -201,6 +204,7 @@ const RegisterForm: FC = () => {
                 </Card>
             </div>
         </div>
+       </>
     );
 };
 
