@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         description,
         emojiLogo,
         userId: dbUser.id,
-        banner: "",
+        banner
       },
     });
 
