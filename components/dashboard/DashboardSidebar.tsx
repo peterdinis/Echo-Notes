@@ -16,11 +16,11 @@ import {
   FileText,
   ChevronLeft
 } from "lucide-react";
-import SettingsModal from "./SettingsModal";
 import { useDroppable } from "@dnd-kit/core";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import SettingsModal from "./SettingsModal";
 
 type NoteFolder = {
   id: string;
