@@ -11,7 +11,8 @@ import {
 import { Palette } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import {toast} from "sonner"
+import { useToast } from "@/hooks/shared/use-toast";
+
 
 const predefinedColors = [
   // Dark themes
@@ -47,6 +48,7 @@ interface BackgroundPickerProps {
 const BackgroundPicker = ({ onChange, currentColor }: BackgroundPickerProps) => {
   const [color, setColor] = useState(currentColor);
   const [opacity, setOpacity] = useState(100);
+  const {toast} = useToast()
   const [previewStyle, setPreviewStyle] = useState<React.CSSProperties>({});
   // Update preview style when color changes
   useEffect(() => {
