@@ -96,7 +96,7 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
   const [selectedConnectionType, setSelectedConnectionType] = useState<ConnectionType>('default');
 
   // Parse content for links between notes
-  const extractLinks = useCallback((notes: Note[]) => {
+  const extractLinks = useCallback((notes: any[]) => {
     const newEdges: Edge[] = [];
     
     notes.forEach((sourceNote) => {
@@ -124,7 +124,7 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
     if (!notes.length) return;
     
     // Create nodes from notes
-    const newNodes: Node[] = notes.map((note) => ({
+    const newNodes: any[] = notes.map((note) => ({
       id: note.id,
       data: { 
         label: note.title,
