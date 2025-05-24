@@ -41,8 +41,8 @@ type Note = {
 };
 
 interface GraphViewProps {
-  notes: Note[];
-  onSelectNote: (note: Note) => void;
+  notes:any[];
+  onSelectNote: (note: any) => void;
 }
 
 // Define connection types
