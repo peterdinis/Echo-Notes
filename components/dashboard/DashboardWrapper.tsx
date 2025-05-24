@@ -1,6 +1,7 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import Sidebar from "@/components/dashboard/Sidebar";
 import NotesList from "@/components/dashboard/NotesList";
 import NoteEditor from "@/components/dashboard/NoteEditor";
 import GraphView from "@/components/dashboard/GraphView";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { DndContext, DragEndEvent, useSensor, useSensors, MouseSensor, TouchSensor } from "@dnd-kit/core";
 import { Trash2, PanelLeft, PanelRight, Maximize, Minimize } from "lucide-react";
 import { useIsMobile } from "@/hooks/shared/use-mobile";
+import Sidebar from "./DashboardSidebar";
 
 export type Note = {
   id: string;
