@@ -17,6 +17,7 @@ import {
   Connection,
   ConnectionMode,
   ReactFlowProvider,
+  OnConnect,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
@@ -48,8 +49,13 @@ interface GraphViewProps {
 // Define connection types
 type ConnectionType = 'default' | 'reference' | 'subordinate' | 'bidirectional';
 
+
+// Define typed node and edge types
+type CustomNode = Node<any>;
+type CustomEdge = Edge;
+
 // Connection style configurations
-const connectionStyles = {
+const connectionStyles: Record<ConnectionType, Partial<CustomEdge>> = {
   default: {
     animated: false,
     markerEnd: {
@@ -89,15 +95,15 @@ const connectionStyles = {
 };
 
 const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [nodes, setNodes, onNodesChange] = useNodesState<any>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<CustomEdge>([]);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
   const [selectedConnectionType, setSelectedConnectionType] = useState<ConnectionType>('default');
 
   // Parse content for links between notes
-  const extractLinks = useCallback((notes: Note[]) => {
-    const newEdges: Edge[] = [];
+  const extractLinks = useCallback((notes: Note[]): CustomEdge[] => {
+    const newEdges: CustomEdge[] = [];
     
     notes.forEach((sourceNote) => {
       notes.forEach((targetNote) => {
@@ -124,11 +130,12 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
     if (!notes.length) return;
     
     // Create nodes from notes
-    const newNodes: Node[] = notes.map((note) => ({
+    const newNodes: CustomNode[] = notes.map((note) => ({
       id: note.id,
       data: { 
         label: note.title,
-        note 
+        note,
+        primary: false
       },
       position: {
         x: Math.random() * 500,
@@ -142,6 +149,7 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
         padding: '10px',
         width: 180,
       },
+      type: 'default',
     }));
     
     setNodes(newNodes);
@@ -151,8 +159,14 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
     setEdges(newEdges);
   }, [notes, extractLinks, setNodes, setEdges]);
 
-  const onConnect = useCallback(
+  const onConnect: OnConnect = useCallback(
     (params: Connection) => {
+      // Ensure required properties exist
+      if (!params.source || !params.target) {
+        toast.error("Invalid connection parameters");
+        return;
+      }
+
       // Create a custom edge ID to prevent duplicates
       const edgeId = `e-${params.source}-${params.target}`;
       
@@ -168,9 +182,12 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
       const connectionStyle = connectionStyles[selectedConnectionType];
       
       // Add the new edge with styling
-      const newEdge = {
-        ...params,
+      const newEdge: CustomEdge = {
         id: edgeId,
+        source: params.source,
+        target: params.target,
+        sourceHandle: params.sourceHandle || undefined,
+        targetHandle: params.targetHandle || undefined,
         ...connectionStyle,
       };
       
@@ -182,23 +199,24 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
     [setEdges, edges, selectedConnectionType]
   );
 
-  // Fix: Properly type the node click handler and ensure the note exists
-  const onNodeClick: NodeMouseHandler = (_event, node) => {
+  // Properly typed node click handler
+  const onNodeClick: NodeMouseHandler = useCallback((event, node) => {
     // If we're in connecting mode, don't select the node
     if (isConnecting) {
       return;
     }
     
-    // Ensure node.data.note exists and is a Note type
-    const selectedNote = node.data?.note as Note;
+    // Type assertion since we know the node structure
+    const customNode = node as unknown as CustomNode;
+    const selectedNote = customNode.data.note;
     
     if (selectedNote && selectedNote.id) {
       onSelectNote(selectedNote);
     }
-  };
+  }, [isConnecting, onSelectNote]);
 
   // Handle starting a connection from a node
-  const startConnecting = (nodeId: string, connectionType: ConnectionType) => {
+  const startConnecting = useCallback((nodeId: string, connectionType: ConnectionType) => {
     setIsConnecting(true);
     setConnectingNodeId(nodeId);
     setSelectedConnectionType(connectionType);
@@ -206,13 +224,13 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
       description: "Click on a note to create a connection, or press Escape to cancel",
       duration: 3000,
     });
-  };
+  }, []);
 
   // Cancel connecting mode
-  const cancelConnecting = () => {
+  const cancelConnecting = useCallback(() => {
     setIsConnecting(false);
     setConnectingNodeId(null);
-  };
+  }, []);
 
   // Handle keyboard escape key to cancel connecting
   useEffect(() => {
@@ -228,16 +246,16 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isConnecting]);
+  }, [isConnecting, cancelConnecting]);
 
   // Handle edge deletion
-  const onEdgeDelete = (edgeId: string) => {
+  const onEdgeDelete = useCallback((edgeId: string) => {
     setEdges((edges) => edges.filter((edge) => edge.id !== edgeId));
     toast.success("Connection removed");
-  };
+  }, [setEdges]);
   
   // Change connection type of an existing edge
-  const changeConnectionType = (edgeId: string, newType: ConnectionType) => {
+  const changeConnectionType = useCallback((edgeId: string, newType: ConnectionType) => {
     setEdges((edges) => 
       edges.map((edge) => {
         if (edge.id === edgeId) {
@@ -250,7 +268,13 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
       })
     );
     toast.success(`Connection type changed to ${newType}`);
-  };
+  }, [setEdges]);
+
+  // MiniMap node color function with proper typing
+  const getNodeColor = useCallback((node: Node): string => {
+    const customNode = node as unknown as CustomNode;
+    return customNode.data.primary ? "#9b87f5" : "#555555";
+  }, []);
 
   return (
     <div className="w-full h-full overflow-hidden relative">
@@ -268,7 +292,7 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
           <Background color="#39383F" gap={16} />
           <Controls />
           <MiniMap 
-            nodeColor={(node) => node.data.primary ? "#9b87f5" : "#555555"} 
+            nodeColor={getNodeColor}
             className="!bg-obsidian-dark"
             maskColor="rgba(0, 0, 0, 0.2)"
           />
@@ -290,43 +314,48 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
               <h4 className="font-medium mb-2">Linked mentions</h4>
               {edges.length > 0 ? (
                 <ul className="text-obsidian-muted">
-                  {edges.slice(0, 5).map((edge) => (
-                    <li key={edge.id} className="mb-1 flex justify-between items-center group">
-                      <span>
-                        {nodes.find(n => n.id === edge.source)?.data.label} →{" "}
-                        {nodes.find(n => n.id === edge.target)?.data.label}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="text-obsidian-muted hover:text-obsidian-text opacity-0 group-hover:opacity-100 transition-opacity">
-                              <ArrowRightLeft className="h-3 w-3" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'default')}>
-                              <Link className="h-3 w-3 mr-2" /> Default
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'reference')}>
-                              <ArrowDown className="h-3 w-3 mr-2" /> Reference
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'subordinate')}>
-                              <CornerDownRight className="h-3 w-3 mr-2" /> Subordinate
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'bidirectional')}>
-                              <ArrowRightLeft className="h-3 w-3 mr-2" /> Bidirectional
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <button 
-                          onClick={() => onEdgeDelete(edge.id)} 
-                          className="text-obsidian-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </li>
-                  ))}
+                  {edges.slice(0, 5).map((edge) => {
+                    const sourceNode = nodes.find(n => n.id === edge.source);
+                    const targetNode = nodes.find(n => n.id === edge.target);
+                    
+                    return (
+                      <li key={edge.id} className="mb-1 flex justify-between items-center group">
+                        <span>
+                          {sourceNode?.data.label || 'Unknown'} →{" "}
+                          {targetNode?.data.label || 'Unknown'}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button className="text-obsidian-muted hover:text-obsidian-text opacity-0 group-hover:opacity-100 transition-opacity">
+                                <ArrowRightLeft className="h-3 w-3" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40">
+                              <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'default')}>
+                                <Link className="h-3 w-3 mr-2" /> Default
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'reference')}>
+                                <ArrowDown className="h-3 w-3 mr-2" /> Reference
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'subordinate')}>
+                                <CornerDownRight className="h-3 w-3 mr-2" /> Subordinate
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => changeConnectionType(edge.id, 'bidirectional')}>
+                                <ArrowRightLeft className="h-3 w-3 mr-2" /> Bidirectional
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <button 
+                            onClick={() => onEdgeDelete(edge.id)} 
+                            className="text-obsidian-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
                   {edges.length > 5 && <li>+ {edges.length - 5} more</li>}
                 </ul>
               ) : (
@@ -402,8 +431,8 @@ const GraphView = ({ notes, onSelectNote }: GraphViewProps) => {
             id={`node-${node.id}`}
             className="absolute"
             style={{
-              width: node.style?.width || 180,
-              height: node.style?.height || 'auto',
+              width: (node.style?.width as number) || 180,
+              height: (node.style?.height as number) || 'auto',
               left: node.position.x,
               top: node.position.y,
               zIndex: 10,
