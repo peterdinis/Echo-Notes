@@ -49,136 +49,139 @@ const LoginForm: FC = () => {
     return (
         <>
             <Navigation />
-            <div className='dark:bg-background bg-stone-200 flex min-h-screen items-center justify-center px-4 py-12'>
-            <div className='absolute inset-0 z-0'>
-                <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
-                <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
-            </div>
+            <div className='dark:bg-background flex min-h-screen items-center justify-center bg-stone-200 px-4 py-12'>
+                <div className='absolute inset-0 z-0'>
+                    <div className='bg-obsidian-accent/5 absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
+                    <div className='bg-obsidian-accent2/5 absolute right-10 bottom-20 h-96 w-96 rounded-full blur-3xl filter' />
+                </div>
 
-            <div className='z-10 container mx-auto max-w-md'>
-                <Link
-                    href='/'
-                    className='mb-8 flex items-center justify-center space-x-2'
-                >
-                    <div className='bg-pink-600 flex h-8 w-8 items-center justify-center rounded-full'>
-                        <span className='text-obsidian-darkest font-bold'>
-                            E
+                <div className='z-10 container mx-auto max-w-md'>
+                    <Link
+                        href='/'
+                        className='mb-8 flex items-center justify-center space-x-2'
+                    >
+                        <div className='flex h-8 w-8 items-center justify-center rounded-full bg-pink-600'>
+                            <span className='text-obsidian-darkest font-bold'>
+                                E
+                            </span>
+                        </div>
+                        <span className='text-obsidian-text text-xl font-bold'>
+                            EchoNotes
                         </span>
-                    </div>
-                    <span className='text-obsidian-text text-xl font-bold'>
-                        EchoNotes
-                    </span>
-                </Link>
+                    </Link>
 
-                <Card className='bg-obsidian-dark border-obsidian-dark animate-scale-in'>
-                    <CardHeader>
-                        <CardTitle className='text-obsidian-text text-center text-2xl'>
-                            Sign in to your account
-                        </CardTitle>
-                        <CardDescription className='text-obsidian-muted text-center'>
-                            Enter your credentials below
-                        </CardDescription>
-                    </CardHeader>
+                    <Card className='bg-obsidian-dark border-obsidian-dark animate-scale-in'>
+                        <CardHeader>
+                            <CardTitle className='text-obsidian-text text-center text-2xl'>
+                                Sign in to your account
+                            </CardTitle>
+                            <CardDescription className='text-obsidian-muted text-center'>
+                                Enter your credentials below
+                            </CardDescription>
+                        </CardHeader>
 
-                    <CardContent>
-                        <form
-                            onSubmit={handleSubmit(onSubmit)}
-                            className='space-y-4'
-                        >
-                            <div className='space-y-2'>
-                                <Label
-                                    htmlFor='email'
-                                    className='text-obsidian-text'
-                                >
-                                    Email
-                                </Label>
-                                <Input
-                                    id='email'
-                                    type='email'
-                                    placeholder='name@example.com'
-                                    className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
-                                    {...register('email', {
-                                        required: 'Email is required',
-                                        pattern: {
-                                            value: /\S+@\S+\.\S+/,
-                                            message: 'Invalid email address',
-                                        },
-                                    })}
-                                />
-                                {errors.email && (
-                                    <p className='text-sm text-red-500'>
-                                        {errors.email.message}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className='space-y-2'>
-                                <Label
-                                    htmlFor='password'
-                                    className='text-obsidian-text'
-                                >
-                                    Password
-                                </Label>
-                                <Input
-                                    id='password'
-                                    type='password'
-                                    placeholder='Your password'
-                                    className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
-                                    {...register('password', {
-                                        required: 'Password is required',
-                                        minLength: {
-                                            value: 6,
-                                            message:
-                                                'Password must be at least 6 characters',
-                                        },
-                                    })}
-                                />
-                                {errors.password && (
-                                    <p className='text-sm text-red-500'>
-                                        {errors.password.message}
-                                    </p>
-                                )}
-                            </div>
-
-                            <Button
-                                type='submit'
-                                className='w-full mt-2'
-                                disabled={
-                                    isSubmitting || loginMutation.isPending
-                                }
+                        <CardContent>
+                            <form
+                                onSubmit={handleSubmit(onSubmit)}
+                                className='space-y-4'
                             >
-                                {isSubmitting || loginMutation.isPending
-                                    ? <Loader2 className='animate-spin w-8 h-8' />
-                                    : 'Sign In'}
-                            </Button>
-
-                            <div className='relative my-6'>
-                                <div className='absolute inset-0 flex items-center'>
-                                    <div className='border-obsidian-dark w-full border-t'></div>
+                                <div className='space-y-2'>
+                                    <Label
+                                        htmlFor='email'
+                                        className='text-obsidian-text'
+                                    >
+                                        Email
+                                    </Label>
+                                    <Input
+                                        id='email'
+                                        type='email'
+                                        placeholder='name@example.com'
+                                        className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                        {...register('email', {
+                                            required: 'Email is required',
+                                            pattern: {
+                                                value: /\S+@\S+\.\S+/,
+                                                message:
+                                                    'Invalid email address',
+                                            },
+                                        })}
+                                    />
+                                    {errors.email && (
+                                        <p className='text-sm text-red-500'>
+                                            {errors.email.message}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className='relative flex justify-center text-xs'>
-                                    <span className='bg-obsidian-dark text-obsidian-muted px-2'>
-                                        Or continue with
-                                    </span>
-                                </div>
-                            </div>
-                        </form>
-                    </CardContent>
 
-                    <CardFooter className='flex justify-center'>
-                        <p className='text-obsidian-muted text-sm'>
-                            Don&apos;t have an account?{' '}
-                            <Link
-                                href='/register'
-                                className='text-obsidian-accent hover:underline'
-                            >
-                                Create one
-                            </Link>
-                        </p>
-                    </CardFooter>
-                </Card>
+                                <div className='space-y-2'>
+                                    <Label
+                                        htmlFor='password'
+                                        className='text-obsidian-text'
+                                    >
+                                        Password
+                                    </Label>
+                                    <Input
+                                        id='password'
+                                        type='password'
+                                        placeholder='Your password'
+                                        className='bg-obsidian-darkest border-obsidian-dark text-obsidian-text'
+                                        {...register('password', {
+                                            required: 'Password is required',
+                                            minLength: {
+                                                value: 6,
+                                                message:
+                                                    'Password must be at least 6 characters',
+                                            },
+                                        })}
+                                    />
+                                    {errors.password && (
+                                        <p className='text-sm text-red-500'>
+                                            {errors.password.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <Button
+                                    type='submit'
+                                    className='mt-2 w-full'
+                                    disabled={
+                                        isSubmitting || loginMutation.isPending
+                                    }
+                                >
+                                    {isSubmitting || loginMutation.isPending ? (
+                                        <Loader2 className='h-8 w-8 animate-spin' />
+                                    ) : (
+                                        'Sign In'
+                                    )}
+                                </Button>
+
+                                <div className='relative my-6'>
+                                    <div className='absolute inset-0 flex items-center'>
+                                        <div className='border-obsidian-dark w-full border-t'></div>
+                                    </div>
+                                    <div className='relative flex justify-center text-xs'>
+                                        <span className='bg-obsidian-dark text-obsidian-muted px-2'>
+                                            Or continue with
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </CardContent>
+
+                        <CardFooter className='flex justify-center'>
+                            <p className='text-obsidian-muted text-sm'>
+                                Don&apos;t have an account?{' '}
+                                <Link
+                                    href='/register'
+                                    className='text-obsidian-accent hover:underline'
+                                >
+                                    Create one
+                                </Link>
+                            </p>
+                        </CardFooter>
+                    </Card>
+                </div>
             </div>
-        </div>
         </>
     );
 };

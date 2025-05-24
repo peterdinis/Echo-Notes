@@ -1,8 +1,8 @@
-import StartSettingsWrapper from "@/components/workspace/StartSettingsWrapper";
-import { NextPage } from "next";
+import StartSettingsWrapper from '@/components/workspace/StartSettingsWrapper';
+import { NextPage } from 'next';
 
 const WorkspaceStartPage: NextPage = () => {
-    return  <StartSettingsWrapper />
-}
+    return <StartSettingsWrapper />;
+};
 
-export default WorkspaceStartPage
+export default WorkspaceStartPage;
