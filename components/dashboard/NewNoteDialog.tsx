@@ -15,8 +15,6 @@ import {
   Heading2,
   Heading3,
   Heading4,
-  Heading5,
-  Heading6
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -125,7 +123,7 @@ const NewNoteDialog = ({ isOpen, onClose, onSave }: NewNoteDialogProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-obsidian-dark border-obsidian-darkest text-obsidian-text max-w-3xl w-full h-[80vh] max-h-[800px] flex flex-col">
+      <DialogContent className="bg-stone-900 border-obsidian-darkest text-obsidian-text max-w-3xl w-full h-[80vh] max-h-[800px] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-obsidian-text text-2xl">New Note</DialogTitle>
         </DialogHeader>

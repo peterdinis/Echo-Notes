@@ -84,7 +84,7 @@ const SettingsModal = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-obsidian-dark border-obsidian-darkest text-obsidian-text max-w-md">
+      <DialogContent className="bg-stone-800 border-obsidian-darkest text-obsidian-text max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-obsidian-text">
             <Settings className="h-5 w-5" />
