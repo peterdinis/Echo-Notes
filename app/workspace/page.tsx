@@ -1,9 +1,7 @@
-import { NextPage } from "next";
+import { NextPage } from 'next';
 
 const WorkspacePage: NextPage = () => {
-    return (
-        <>ABCD</>
-    )
-}
+    return <>ABCD</>;
+};
 
-export default WorkspacePage
+export default WorkspacePage;
