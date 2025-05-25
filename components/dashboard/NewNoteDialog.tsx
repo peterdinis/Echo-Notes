@@ -180,7 +180,7 @@ const NewNoteDialog = ({ isOpen, onClose, onSave }: NewNoteDialogProps) => {
                         >
                             <Bold />
                         </Button>
- 
+
                         <Button
                             variant='ghost'
                             size='icon'
