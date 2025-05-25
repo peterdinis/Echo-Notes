@@ -194,6 +194,32 @@ const Dashboard = () => {
         }
     }, [enableCustomColors]);
 
+
+
+    // Save background color to local storage when it changes
+    useEffect(() => {
+        localStorage.setItem('dashboard-bg-color', backgroundColor);
+        // Only apply theme color if custom colors are enabled
+        if (enableCustomColors) {
+            applyThemeColor(backgroundColor);
+        }
+    }, [backgroundColor, enableCustomColors]);
+
+        const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+            distance: 10, // 10px of movement required before activation
+        },
+    });
+
+    const touchSensor = useSensor(TouchSensor, {
+        activationConstraint: {
+            delay: 250, // 250ms delay before activation
+            tolerance: 5, // 5px of movement allowed before cancellation
+        },
+    });
+
+    const sensors = useSensors(mouseSensor, touchSensor);
+
     // Enhanced function that applies the color theme to the entire dashboard
     const applyThemeColor = (color: string) => {
         // Check if color has an opacity component (8 characters instead of 7)
@@ -373,30 +399,6 @@ const Dashboard = () => {
         return (r * 299 + g * 587 + b * 114) / 1000;
     };
 
-    // Save background color to local storage when it changes
-    useEffect(() => {
-        localStorage.setItem('dashboard-bg-color', backgroundColor);
-        // Only apply theme color if custom colors are enabled
-        if (enableCustomColors) {
-            applyThemeColor(backgroundColor);
-        }
-    }, [backgroundColor, enableCustomColors]);
-
-    const mouseSensor = useSensor(MouseSensor, {
-        activationConstraint: {
-            distance: 10, // 10px of movement required before activation
-        },
-    });
-
-    const touchSensor = useSensor(TouchSensor, {
-        activationConstraint: {
-            delay: 250, // 250ms delay before activation
-            tolerance: 5, // 5px of movement allowed before cancellation
-        },
-    });
-
-    const sensors = useSensors(mouseSensor, touchSensor);
-
     const toggleSidebar = () => {
         setSidebarCollapsed(!sidebarCollapsed);
     };
@@ -522,7 +524,6 @@ const Dashboard = () => {
 
     const handleBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
-        // Theme will be applied by the useEffect that watches backgroundColor
     };
 
     const filteredNotes = notes.filter((note) => note.isInTrash === showTrash);
