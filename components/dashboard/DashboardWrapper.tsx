@@ -134,6 +134,22 @@ const Dashboard = () => {
     // Use the mobile hook to detect smaller screens
     const isMobile = useIsMobile();
 
+    // Sensors setup - moved outside of useEffect
+    const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+            distance: 10, // 10px of movement required before activation
+        },
+    });
+
+    const touchSensor = useSensor(TouchSensor, {
+        activationConstraint: {
+            delay: 250, // 250ms delay before activation
+            tolerance: 5, // 5px of movement allowed before cancellation
+        },
+    });
+
+    const sensors = useSensors(mouseSensor, touchSensor);
+
     // Auto collapse sidebar and list on mobile
     useEffect(() => {
         if (isMobile) {
@@ -142,31 +158,70 @@ const Dashboard = () => {
         }
     }, [isMobile]);
 
-    // Use local storage for settings if available
+    // Initialize settings from localStorage (avoid conditional hooks)
     useEffect(() => {
-        // Load color theme settings
-        const savedColor = localStorage.getItem('dashboard-bg-color');
-        if (savedColor) {
-            setBackgroundColor(savedColor);
-        }
+        // Check if localStorage is available
+        if (typeof window === 'undefined') return;
 
-        // Load custom colors enable/disable setting
-        const savedEnableCustomColors = localStorage.getItem(
-            'dashboard-enable-custom-colors',
-        );
-        if (savedEnableCustomColors !== null) {
-            setEnableCustomColors(savedEnableCustomColors === 'true');
-        }
+        try {
+            // Load color theme settings
+            const savedColor = localStorage.getItem('dashboard-bg-color');
+            if (savedColor) {
+                setBackgroundColor(savedColor);
+            }
 
-        // Apply the theme color if custom colors are enabled
-        if (enableCustomColors && savedColor) {
-            applyThemeColor(savedColor);
-        } else {
-            // Reset to default theme if custom colors are disabled
-            applyThemeColor('#1A1A26');
+            // Load custom colors enable/disable setting
+            const savedEnableCustomColors = localStorage.getItem(
+                'dashboard-enable-custom-colors',
+            );
+            if (savedEnableCustomColors !== null) {
+                setEnableCustomColors(savedEnableCustomColors === 'true');
+            }
+        } catch (error) {
+            console.warn('Error accessing localStorage:', error);
         }
+    }, []); // Empty dependency array - only run once on mount
 
-        // Listen for settings changes
+    // Apply theme colors when settings change
+    useEffect(() => {
+        const applyTheme = () => {
+            if (enableCustomColors) {
+                applyThemeColor(backgroundColor);
+            } else {
+                // Reset to default theme
+                applyThemeColor('#1A1A26');
+            }
+        };
+
+        applyTheme();
+    }, [backgroundColor, enableCustomColors]);
+
+    // Save settings to localStorage
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        try {
+            localStorage.setItem('dashboard-bg-color', backgroundColor);
+        } catch (error) {
+            console.warn('Error saving to localStorage:', error);
+        }
+    }, [backgroundColor]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        try {
+            localStorage.setItem(
+                'dashboard-enable-custom-colors',
+                enableCustomColors.toString()
+            );
+        } catch (error) {
+            console.warn('Error saving to localStorage:', error);
+        }
+    }, [enableCustomColors]);
+
+    // Listen for settings changes
+    useEffect(() => {
         const handleSettingsChange = (e: Event) => {
             const customEvent = e as CustomEvent;
             if (customEvent.detail?.key === 'enableCustomColors') {
@@ -183,16 +238,6 @@ const Dashboard = () => {
             );
         };
     }, []);
-
-    // Apply theme when enableCustomColors setting changes
-    useEffect(() => {
-        if (enableCustomColors) {
-            applyThemeColor(backgroundColor);
-        } else {
-            // Reset to default theme
-            applyThemeColor('#1A1A26');
-        }
-    }, [enableCustomColors]);
 
     // Enhanced function that applies the color theme to the entire dashboard
     const applyThemeColor = (color: string) => {
@@ -373,30 +418,6 @@ const Dashboard = () => {
         return (r * 299 + g * 587 + b * 114) / 1000;
     };
 
-    // Save background color to local storage when it changes
-    useEffect(() => {
-        localStorage.setItem('dashboard-bg-color', backgroundColor);
-        // Only apply theme color if custom colors are enabled
-        if (enableCustomColors) {
-            applyThemeColor(backgroundColor);
-        }
-    }, [backgroundColor, enableCustomColors]);
-
-    const mouseSensor = useSensor(MouseSensor, {
-        activationConstraint: {
-            distance: 10, // 10px of movement required before activation
-        },
-    });
-
-    const touchSensor = useSensor(TouchSensor, {
-        activationConstraint: {
-            delay: 250, // 250ms delay before activation
-            tolerance: 5, // 5px of movement allowed before cancellation
-        },
-    });
-
-    const sensors = useSensors(mouseSensor, touchSensor);
-
     const toggleSidebar = () => {
         setSidebarCollapsed(!sidebarCollapsed);
     };
@@ -522,7 +543,6 @@ const Dashboard = () => {
 
     const handleBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
-        // Theme will be applied by the useEffect that watches backgroundColor
     };
 
     const filteredNotes = notes.filter((note) => note.isInTrash === showTrash);

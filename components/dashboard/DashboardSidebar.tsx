@@ -266,7 +266,7 @@ const Sidebar = ({
                     <div className='space-y-1 pl-2'>
                         {folder.notes.map((note) => (
                             <Link
-                                href={`/dashboard/note/${note.id}`}
+                                href={`/note/${note.id}`}
                                 key={note.id}
                                 className='block rounded p-2 text-sm text-[var(--foreground)] hover:bg-[var(--muted)] hover:text-[var(--accent)]'
                             >
