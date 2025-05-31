@@ -550,7 +550,7 @@ const Dashboard = () => {
     return (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <div
-                className={`flex h-screen overflow-hidden ${fullscreen ? 'bg-background fixed inset-0 z-50' : ''}`}
+                className={`flex h-screen overflow-hidden ${fullscreen ? 'bg-stone-200 fixed inset-0 z-50' : ''}`}
             >
                 <Sidebar
                     collapsed={sidebarCollapsed}

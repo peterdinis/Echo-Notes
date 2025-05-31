@@ -11,7 +11,6 @@ const Hero: FC = () => {
         <div className='dark:bg-background min-h-screen bg-stone-200'>
             <Navigation />
             <section className='relative flex min-h-screen items-center justify-center overflow-hidden py-20'>
-                {/* Background Effects */}
                 <div className='bg-obsidian-darkest absolute inset-0 z-0'>
                     <div className='bg-obsidian-accent/10 animate-float absolute top-20 left-10 h-72 w-72 rounded-full blur-3xl filter' />
                     <div
@@ -60,8 +59,7 @@ const Hero: FC = () => {
                             </Button>
                         </div>
                     </div>
-
-                    {/* Preview Image */}
+                    
                     <div
                         className='animate-fade-in shadow-obsidian-accent/20 mx-auto mt-16 max-w-5xl overflow-hidden rounded-lg shadow-2xl dark:bg-stone-900'
                         style={{ animationDelay: '0.6s' }}
