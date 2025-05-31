@@ -1,6 +1,6 @@
 {
     "name": "echo-notes",
-    "version": "0.3.0",
+    "version": "0.2.0",
     "private": true,
     "scripts": {
         "dev": "next dev --turbopack",
@@ -8,6 +8,7 @@
         "start": "next start",
         "lint": "next lint",
         "knip": "knip",
+        "knip:fix": "pnpm knip --fix",
         "format": "prettier --check --ignore-path .gitignore .",
         "format:fix": "prettier --write --ignore-path .gitignore .",
         "storybook": "storybook dev -p 6006",
