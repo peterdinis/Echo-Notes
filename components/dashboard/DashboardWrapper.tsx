@@ -571,12 +571,6 @@ const Dashboard = () => {
 
     return (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <DashboardContextMenu 
-                open={open}
-                setOpen={setOpen}
-                triggerRef={triggerRef as unknown as RefObject<HTMLDivElement>}
-                position={position}
-            />
             <div
                 className={`flex h-screen overflow-hidden ${fullscreen ? 'bg-background fixed inset-0 z-50' : ''}`}
             >
@@ -727,6 +721,12 @@ const Dashboard = () => {
                     onSave={handleCreateNote}
                 />
             </div>
+                        <DashboardContextMenu 
+                open={open}
+                setOpen={setOpen}
+                triggerRef={triggerRef as unknown as RefObject<HTMLDivElement>}
+                position={position}
+            />
         </DndContext>
     );
 };

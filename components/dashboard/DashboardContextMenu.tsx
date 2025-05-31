@@ -19,7 +19,7 @@ const DashboardContextMenu: FC<DashboardContextMenuPropsType> = ({
   return (
     <ContextMenu open={open} onOpenChange={setOpen}>
       <ContextMenuTrigger asChild>
-        <div ref={triggerRef} className="h-screen w-screen" />
+        <div ref={triggerRef} />
       </ContextMenuTrigger>
       <ContextMenuContent
         style={{
