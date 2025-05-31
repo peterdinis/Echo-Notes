@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 import { Button } from '@/components/ui/button';
 import NotesList from '@/components/dashboard/NotesList';
 import NoteEditor from '@/components/dashboard/NoteEditor';
@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/shared/use-mobile';
 import Sidebar from './DashboardSidebar';
+import DashboardContextMenu from './DashboardContextMenu';
 
 export type Note = {
     id: string;
@@ -195,6 +196,27 @@ const Dashboard = () => {
 
         applyTheme();
     }, [backgroundColor, enableCustomColors]);
+
+    const triggerRef = useRef<HTMLDivElement | null>(null);
+    const [open, setOpen] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.ctrlKey && e.key === 'i') {
+                e.preventDefault();
+
+                const x = window.innerWidth / 2;
+                const y = window.innerHeight / 2;
+
+                setPosition({ x, y });
+                setOpen(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     // Save settings to localStorage
     useEffect(() => {
@@ -549,6 +571,12 @@ const Dashboard = () => {
 
     return (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <DashboardContextMenu 
+                open={open}
+                setOpen={setOpen}
+                triggerRef={triggerRef as unknown as RefObject<HTMLDivElement>}
+                position={position}
+            />
             <div
                 className={`flex h-screen overflow-hidden ${fullscreen ? 'bg-background fixed inset-0 z-50' : ''}`}
             >
@@ -644,11 +672,10 @@ const Dashboard = () => {
                             {!showTrash && !isMobile && (
                                 <button
                                     onClick={toggleView}
-                                    className={`hidden rounded px-3 py-1.5 text-sm sm:block ${
-                                        view === 'editor'
+                                    className={`hidden rounded px-3 py-1.5 text-sm sm:block ${view === 'editor'
                                             ? 'bg-[var(--muted)] text-[var(--foreground)]'
                                             : 'bg-obsidian-accent/20 text-obsidian-accent'
-                                    }`}
+                                        }`}
                                 >
                                     {view === 'editor'
                                         ? 'Editor'
