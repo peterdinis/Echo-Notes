@@ -1,11 +1,7 @@
-import { NextPage } from "next";
+import { NextPage } from 'next';
 
 const NoteDetailPage: NextPage = () => {
-    return (
-        <>
-            Note Detail
-        </>
-    )
-}
+    return <>Note Detail</>;
+};
 
-export default NoteDetailPage
+export default NoteDetailPage;
