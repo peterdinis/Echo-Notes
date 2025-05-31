@@ -213,7 +213,7 @@ const Dashboard = () => {
         try {
             localStorage.setItem(
                 'dashboard-enable-custom-colors',
-                enableCustomColors.toString()
+                enableCustomColors.toString(),
             );
         } catch (error) {
             console.warn('Error saving to localStorage:', error);
