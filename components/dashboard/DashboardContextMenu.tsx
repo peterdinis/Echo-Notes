@@ -5,17 +5,17 @@ import { ContextMenuContent, ContextMenuItem } from "../ui/context-menu";
 import { createPortal } from "react-dom";
 
 type DashboardContextMenuPropsType = {
-  open: boolean;
-  setOpen?: (open: boolean) => void;
-  triggerRef: RefObject<HTMLDivElement>;
-  position: { x: number; y: number };
+    open: boolean;
+    setOpen?: (open: boolean) => void;
+    triggerRef: RefObject<HTMLDivElement>;
+    position: { x: number; y: number };
 };
 
 const DashboardContextMenu: FC<DashboardContextMenuPropsType> = ({
-  open,
-  setOpen,
-  triggerRef,
-  position,
+    open,
+    setOpen,
+    triggerRef,
+    position,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 

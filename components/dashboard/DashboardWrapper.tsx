@@ -666,10 +666,11 @@ const Dashboard = () => {
                             {!showTrash && !isMobile && (
                                 <button
                                     onClick={toggleView}
-                                    className={`hidden rounded px-3 py-1.5 text-sm sm:block ${view === 'editor'
+                                    className={`hidden rounded px-3 py-1.5 text-sm sm:block ${
+                                        view === 'editor'
                                             ? 'bg-[var(--muted)] text-[var(--foreground)]'
                                             : 'bg-obsidian-accent/20 text-obsidian-accent'
-                                        }`}
+                                    }`}
                                 >
                                     {view === 'editor'
                                         ? 'Editor'
@@ -721,7 +722,7 @@ const Dashboard = () => {
                     onSave={handleCreateNote}
                 />
             </div>
-                        <DashboardContextMenu 
+            <DashboardContextMenu
                 open={open}
                 setOpen={setOpen}
                 triggerRef={triggerRef as unknown as RefObject<HTMLDivElement>}
