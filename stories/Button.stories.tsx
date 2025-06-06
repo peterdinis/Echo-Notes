@@ -16,6 +16,8 @@ const meta: Meta<typeof Button> = {
                 'secondary',
                 'ghost',
                 'link',
+                "success",
+                "warning"
             ],
         },
         size: {
@@ -94,3 +96,15 @@ export const IconButton: Story = {
         children: <Plus className='size-4' />,
     },
 };
+
+export const SuccessButton: Story = {
+    args: {
+        variant: "success"
+    },
+};
+
+export const WarningButton: Story = {
+    args: {
+        variant: "warning"
+    }
+}
