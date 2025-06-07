@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
 import { cn } from '@/lib/utils';
 
 type ColorPaletteProps = {
@@ -15,6 +16,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
   className,
 }) => {
   const [selectedColor, setSelectedColor] = useState<string>('#000000');
+  const [showPicker, setShowPicker] = useState<boolean>(false);
 
   const handleSelect = (color: string) => {
     setSelectedColor(color);
@@ -23,7 +25,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 items-center">
         {colors.map((color) => (
           <button
             key={color}
@@ -37,20 +39,27 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
           />
         ))}
 
-        {/* Custom color picker */}
-        <label className="w-8 h-8 relative cursor-pointer border-2 rounded-full overflow-hidden">
-          <input
-            type="color"
-            onChange={(e) => handleSelect(e.target.value)}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            aria-label="Pick custom color"
-          />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: selectedColor }}
-          />
-        </label>
+        {/* Custom color picker button */}
+        <button
+          onClick={() => setShowPicker(!showPicker)}
+          className={cn(
+            'w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold',
+            showPicker ? 'ring-2 ring-offset-2 ring-black' : ''
+          )}
+          style={{ backgroundColor: selectedColor }}
+        >
+          +
+        </button>
       </div>
+
+      {showPicker && (
+        <div className="w-48">
+          <HexColorPicker
+            color={selectedColor}
+            onChange={(color) => handleSelect(color)}
+          />
+        </div>
+      )}
 
       <p className="text-lg font-semibold" style={{ color: selectedColor }}>
         Selected text color
