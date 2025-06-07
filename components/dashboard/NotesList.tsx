@@ -16,6 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useDraggable } from '@dnd-kit/core';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { isClient } from '@/lib/client';
 
 type Note = {
     id: string;
@@ -197,7 +198,7 @@ const NoteItem = ({
     // Set up draggable functionality, but only if not in trash
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: note.id,
-        disabled: showTrash,
+        disabled: showTrash || !isClient,
     });
 
     return (
